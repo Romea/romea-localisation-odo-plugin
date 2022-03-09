@@ -10,11 +10,11 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>rclcpp</depend>
-  <depend>romea_common</depend>
+  <depend>romea_core_common</depend>
+  <depend>romea_core_mobile_base</depend>
   <depend>romea_common_utils</depend>
-  <depend>romea_odo</depend>
-  <depend>romea_odo_msgs</depend>
-  <depend>romea_odo_utils</depend>
+  <depend>romea_mobile_base_msgs</depend>
+  <depend>romea_mobile_base_utils</depend>
   <depend>romea_localisation_msgs</depend>
   <depend>std_msgs</depend>
   <depend>nav_msgs</depend>
@@ -46,7 +46,7 @@
   <depend>romea_common</depend>
   <depend>romea_common_utils</depend>
   <depend>romea_odo</depend>
-  <depend>romea_odo_msgs</depend>
+  <depend>romea_mobile_base_msgs</depend>
   <depend>romea_localisation_msgs</depend>
 
    <export>

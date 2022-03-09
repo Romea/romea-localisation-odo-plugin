@@ -24,10 +24,10 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(romea_core_common REQUIRED)
+find_package(romea_core_mobile_base REQUIRED)
 find_package(romea_common_utils REQUIRED)
-find_package(romea_core_odo REQUIRED)
-find_package(romea_odo_msgs REQUIRED)
-find_package(romea_odo_utils REQUIRED)
+find_package(romea_mobile_base_msgs REQUIRED)
+find_package(romea_mobile_base_utils REQUIRED)
 find_package(romea_localisation_msgs REQUIRED)
 
 add_executable(${PROJECT_NAME}
@@ -37,10 +37,10 @@ add_executable(${PROJECT_NAME}
 ament_target_dependencies(${PROJECT_NAME}
     rclcpp
     romea_core_common
+    romea_core_mobile_base
     romea_common_utils
-    romea_core_odo
-    romea_odo_msgs
-    romea_odo_utils
+    romea_mobile_base_msgs
+    romea_mobile_base_utils
     romea_localisation_msgs
     std_msgs
     nav_msgs
@@ -58,9 +58,9 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 #ament_export_dependencies(romea_common_utils)
 #ament_export_dependencies(four_wheel_steering_msgs)
 #ament_export_dependencies(ackermann_msgs)
-#ament_export_dependencies(romea_core_odo)
-#ament_export_dependencies(romea_odo_msgs)
-#ament_export_dependencies(romea_odo_utils)
+#ament_export_dependencies(romea_mobile_base)
+#ament_export_dependencies(romea_mobile_base_msgs)
+#ament_export_dependencies(romea_mobile_base_utils)
 #ament_export_dependencies(romea_localisation_msgs)
 
 #ament_export_include_directories(include)
@@ -110,7 +110,7 @@ ament_package()
 #    roslib
 #    nodelet
 #    romea_common_utils
-#    romea_odo_msgs
+#    romea_mobile_base_msgs
 #    romea_localisation_msgs)
 
 #find_package(catkin REQUIRED COMPONENTS ${${PROJECT_NAME}_CATKIN_DEPS})

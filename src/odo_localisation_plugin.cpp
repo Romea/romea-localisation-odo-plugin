@@ -2,6 +2,11 @@
 #include <romea_common_utils/params/node_parameters.hpp>
 #include <rclcpp/logging.hpp>
 
+namespace{
+const std::string restamping_param_name = "restamping";
+const std::string odo_source_param_name = "odo_source";
+}
+
 namespace romea{
 
 
@@ -13,16 +18,21 @@ OdoLocalisationPlugin::OdoLocalisationPlugin():
   twist_pub_(),
   restamping_(false)
 {
+  declare_parameter<bool>(restamping_param_name,false);
+  declare_parameter<std::string>(odo_source_param_name,"kinematic");
 }
 
 //-----------------------------------------------------------------------------
 void OdoLocalisationPlugin::onInit()
 {
+//  auto node_parameters = NodeParameters(this->shared_from_this());
+//  restamping_ = node_parameters.loadParamOr<bool>("restamping",false);
+//  std::string kinematicSourceName = node_parameters.loadParamOr<std::string>("odo_source","kinematic");
 
-  auto node_parameters = NodeParameters(this->shared_from_this());
+  std::shared_ptr<rclcpp::Node> node = this->shared_from_this();
+  restamping_ = romea::get_parameter<bool>(node,restamping_param_name);
+  std::string kinematicSourceName = romea::get_parameter<std::string>(node,odo_source_param_name);
 
-  restamping_ = node_parameters.loadParamOr<bool>("restamping",false);
-  std::string kinematicSourceName = node_parameters.loadParamOr<std::string>("odo_source","kinematic");
   twist_pub_ = create_publisher<romea_localisation_msgs::msg::ObservationTwist2DStamped>("twist",1);
 
   if(kinematicSourceName=="odom")
@@ -33,7 +43,7 @@ void OdoLocalisationPlugin::onInit()
   else if (kinematicSourceName=="kinematic")
   {
     auto callback = std::bind(&OdoLocalisationPlugin::processKinematic_,this,std::placeholders::_1);
-    kinematic_sub_ = create_subscription<romea_odo_msgs::msg::KinematicMeasureStamped>("vehicle_controller/kinematic", 1,callback);
+    kinematic_sub_ = create_subscription<romea_mobile_base_msgs::msg::KinematicMeasureStamped>("vehicle_controller/kinematic", 1,callback);
   }
   else
   {
@@ -78,7 +88,7 @@ void OdoLocalisationPlugin::processOdom_(nav_msgs::msg::Odometry::ConstSharedPtr
 }
 
 //-----------------------------------------------------------------------------
-void OdoLocalisationPlugin::processKinematic_(romea_odo_msgs::msg::KinematicMeasureStamped::ConstSharedPtr msg)
+void OdoLocalisationPlugin::processKinematic_(romea_mobile_base_msgs::msg::KinematicMeasureStamped::ConstSharedPtr msg)
 {
 
   //std::cout << " processKinematic "<< std::endl;
