@@ -22,6 +22,7 @@ find_package(rclcpp REQUIRED)
 #find_package(eigen3_cmake_module REQUIRED)
 #find_package(Eigen3 REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(romea_core_common REQUIRED)
 find_package(romea_core_mobile_base REQUIRED)
@@ -42,6 +43,7 @@ ament_target_dependencies(${PROJECT_NAME}
     romea_mobile_base_msgs
     romea_mobile_base_utils
     romea_localisation_msgs
+    geometry_msgs
     std_msgs
     nav_msgs
     )
@@ -67,9 +69,9 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 #ament_export_libraries(${PROJECT_NAME})
 #ament_export_targets(${PROJECT_NAME})
 
-#install(TARGETS
-#  ${PROJECT_NAME}
-#  DESTINATION lib/${PROJECT_NAME})
+install(TARGETS
+  ${PROJECT_NAME}
+  DESTINATION lib/${PROJECT_NAME})
 
 #install(
 #  DIRECTORY include/
