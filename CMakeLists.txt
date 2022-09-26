@@ -3,16 +3,16 @@ project(romea_odo_localisation_plugin)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
-    set(CMAKE_C_STANDARD 99)
+ set(CMAKE_C_STANDARD 99)
 endif()
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 17)
+ set(CMAKE_CXX_STANDARD 17)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    add_compile_options(-Wall -Wextra -Wpedantic)
+ add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
 
@@ -31,27 +31,47 @@ find_package(romea_mobile_base_msgs REQUIRED)
 find_package(romea_mobile_base_utils REQUIRED)
 find_package(romea_localisation_msgs REQUIRED)
 
-add_executable(${PROJECT_NAME}
-    src/odo_localisation_plugin.cpp
-    src/odo_localisation_plugin_node.cpp)
-
-ament_target_dependencies(${PROJECT_NAME}
-    rclcpp
-    romea_core_common
-    romea_core_mobile_base
-    romea_common_utils
-    romea_mobile_base_msgs
-    romea_mobile_base_utils
-    romea_localisation_msgs
-    geometry_msgs
-    std_msgs
-    nav_msgs
-    )
+add_library(${PROJECT_NAME} SHARED
+ src/odo_localisation_plugin.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>)
+ $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+ $<INSTALL_INTERFACE:include>)
 
+target_compile_definitions(${PROJECT_NAME}
+ PRIVATE "ROMEA_LOCALISATION_ODO_BUILDING_DLL")
+
+ament_target_dependencies(${PROJECT_NAME}
+ rclcpp
+ romea_core_common
+ romea_core_mobile_base
+ romea_common_utils
+ romea_mobile_base_msgs
+ romea_mobile_base_utils
+ romea_localisation_msgs
+ geometry_msgs
+ std_msgs
+ nav_msgs
+ )
+
+rclcpp_components_register_nodes(${PROJECT_NAME}
+ "romea::OdoLocalisationPlugin"
+ )
+
+install(TARGETS
+ ${PROJECT_NAME}
+ ARCHIVE DESTINATION lib
+ LIBRARY DESTINATION lib
+ RUNTIME DESTINATION bin)
+
+
+add_executable(${PROJECT_NAME}_node src/odo_localisation_plugin_node.cpp)
+target_link_libraries(${PROJECT_NAME}_node ${PROJECT_NAME})
+ament_target_dependencies(${PROJECT_NAME} rclcpp)
+
+install(TARGETS
+ ${PROJECT_NAME}_node
+ DESTINATION lib/${PROJECT_NAME})
 
 #ament_export_dependencies(eigen3_cmake_module)
 #ament_export_dependencies(Eigen3)
@@ -69,9 +89,9 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 #ament_export_libraries(${PROJECT_NAME})
 #ament_export_targets(${PROJECT_NAME})
 
-install(TARGETS
-  ${PROJECT_NAME}
-  DESTINATION lib/${PROJECT_NAME})
+#install(TARGETS
+#  ${PROJECT_NAME}
+#  DESTINATION lib/${PROJECT_NAME})
 
 #install(
 #  DIRECTORY include/
@@ -98,50 +118,3 @@ install(TARGETS
 #endif()
 
 ament_package()
-
-#cmake_minimum_required(VERSION 2.8.3)
-#project(romea_odo_localisation_plugin)
-
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -std=c++17")
-
-########################
-### Find dependencies ##
-########################
-#set(${PROJECT_NAME}_CATKIN_DEPS
-#    roscpp
-#    roslib
-#    nodelet
-#    romea_common_utils
-#    romea_mobile_base_msgs
-#    romea_localisation_msgs)
-
-#find_package(catkin REQUIRED COMPONENTS ${${PROJECT_NAME}_CATKIN_DEPS})
-#find_package(romea_common)
-
-####################################
-### catkin specific configuration ##
-####################################
-#catkin_package(
-#    LIBRARIES ${PROJECT_NAME}
-#    CATKIN_DEPENDS ${${PROJECT_NAME}_CATKIN_DEPS})
-
-############
-### build ##
-############
-#include_directories(
-#    SYSTEM ${catkin_INCLUDE_DIRS}
-#    SYSTEM ${romea_common_INCLUDE_DIRS})
-
-#add_library(odo_localisation_plugin_nodelet
-#  src/odo_localisation_plugin_nodelet.cpp)
-
-#add_executable(odo_localisation_plugin_node
-#  src/odo_localisation_plugin_node.cpp)
-
-#target_link_libraries(odo_localisation_plugin_nodelet
-#  ${catkin_LIBRARIES}
-#  romea_common::romea_common)
-
-#target_link_libraries(odo_localisation_plugin_node
-#  ${catkin_LIBRARIES})
-

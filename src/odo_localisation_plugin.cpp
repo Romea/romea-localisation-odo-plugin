@@ -1,5 +1,6 @@
-#include "odo_localisation_plugin.hpp"
+#include "romea_localisation_odo/odo_localisation_plugin.hpp"
 #include <romea_common_utils/params/node_parameters.hpp>
+#include <romea_common_utils/qos.hpp>
 #include <rclcpp/logging.hpp>
 
 namespace{
@@ -11,48 +12,76 @@ namespace romea{
 
 
 //-----------------------------------------------------------------------------
-OdoLocalisationPlugin::OdoLocalisationPlugin():
-  Node("odo_localisation_plugin"),
+OdoLocalisationPlugin::OdoLocalisationPlugin(const rclcpp::NodeOptions & options):
+  node_(std::make_shared<rclcpp::Node>("odo_localisation_plugin",options)),
   odom_sub_(nullptr),
   kinematic_sub_(nullptr),
   twist_pub_(),
   restamping_(false)
 {
-  declare_parameter<bool>(restamping_param_name,false);
-  declare_parameter<std::string>(odo_source_param_name,"kinematic");
+
+  declare_parameters_();
+  restamping_ = get_parameter<bool>(node_,restamping_param_name);
+
+  init_publisher_();
+  init_subscriber_();
 }
 
 //-----------------------------------------------------------------------------
-void OdoLocalisationPlugin::onInit()
+rclcpp::node_interfaces::NodeBaseInterface::SharedPtr
+OdoLocalisationPlugin::get_node_base_interface() const
 {
-//  auto node_parameters = NodeParameters(this->shared_from_this());
-//  restamping_ = node_parameters.loadParamOr<bool>("restamping",false);
-//  std::string kinematicSourceName = node_parameters.loadParamOr<std::string>("odo_source","kinematic");
+  return node_->get_node_base_interface();
+}
 
-  std::shared_ptr<rclcpp::Node> node = this->shared_from_this();
-  restamping_ = romea::get_parameter<bool>(node,restamping_param_name);
-  std::string kinematicSourceName = romea::get_parameter<std::string>(node,odo_source_param_name);
+//-----------------------------------------------------------------------------
+void OdoLocalisationPlugin::declare_parameters_()
+{
+  declare_parameter_with_default<bool>(node_,restamping_param_name,false);
+  declare_parameter<std::string>(node_,odo_source_param_name,"kinematic");
+}
 
-  twist_pub_ = create_publisher<romea_localisation_msgs::msg::ObservationTwist2DStamped>("twist",1);
+//-----------------------------------------------------------------------------
+void OdoLocalisationPlugin::init_subscriber_()
+{
+  std::string odo_source_name = get_parameter<std::string>(node_,odo_source_param_name);
 
-  if(kinematicSourceName=="odom")
+  if(odo_source_name=="odom")
   {
-    auto callback = std::bind(&OdoLocalisationPlugin::processOdom_,this,std::placeholders::_1);
-    odom_sub_ = create_subscription<nav_msgs::msg::Odometry>("vehicle_controller/odom", 1,callback);
+    init_odom_subscriber_();
   }
-  else if (kinematicSourceName=="kinematic")
+  else if (odo_source_name=="kinematic")
   {
-    auto callback = std::bind(&OdoLocalisationPlugin::processKinematic_,this,std::placeholders::_1);
-    kinematic_sub_ = create_subscription<romea_mobile_base_msgs::msg::KinematicMeasureStamped>("vehicle_controller/kinematic", 1,callback);
+    init_kinematic_subscriber_();
   }
   else
   {
-    RCLCPP_ERROR_STREAM(get_logger(),"Unknown odo_source called : "<<kinematicSourceName);
+    throw  std::runtime_error("Unknown odo_source called : " + odo_source_name);
   }
 }
 
 //-----------------------------------------------------------------------------
-void OdoLocalisationPlugin::processOdom_(nav_msgs::msg::Odometry::ConstSharedPtr msg)
+void OdoLocalisationPlugin::init_odom_subscriber_()
+{
+  auto callback = std::bind(&OdoLocalisationPlugin::process_odom_,this,std::placeholders::_1);
+  odom_sub_ = node_->create_subscription<OdometryMsg>("vehicle_controller/odom",best_effort(1),callback);
+}
+
+//-----------------------------------------------------------------------------
+void OdoLocalisationPlugin::init_kinematic_subscriber_()
+{
+  auto callback = std::bind(&OdoLocalisationPlugin::process_kinematic_,this,std::placeholders::_1);
+  kinematic_sub_ = node_->create_subscription<KinematicMeasureStampedMsg>("vehicle_controller/kinematic",best_effort(1),callback);
+}
+
+//-----------------------------------------------------------------------------
+void OdoLocalisationPlugin::init_publisher_()
+{
+  twist_pub_ = node_->create_publisher<ObservationTwist2DStampedMsg>("twist",sensor_data_qos());
+}
+
+//-----------------------------------------------------------------------------
+void OdoLocalisationPlugin::process_odom_(OdometryMsg::ConstSharedPtr msg)
 {
 
   //std::cout << " processOdom_ "<< std::endl;
@@ -60,7 +89,7 @@ void OdoLocalisationPlugin::processOdom_(nav_msgs::msg::Odometry::ConstSharedPtr
   auto twist_msg = std::make_unique<romea_localisation_msgs::msg::ObservationTwist2DStamped>();
 
   twist_msg->header.frame_id = msg->header.frame_id;
-  twist_msg->header.stamp = restamping_ ? get_clock()->now() : rclcpp::Time(msg->header.stamp.sec, msg->header.stamp.nanosec);
+  twist_msg->header.stamp = restamping_ ? node_->get_clock()->now() : rclcpp::Time(msg->header.stamp.sec, msg->header.stamp.nanosec);
   twist_msg->observation_twist.twist.linear_speeds.x =msg->twist.twist.linear.x;
   twist_msg->observation_twist.twist.linear_speeds.y =msg->twist.twist.linear.y;
   twist_msg->observation_twist.twist.angular_speed =msg->twist.twist.angular.z;
@@ -88,7 +117,7 @@ void OdoLocalisationPlugin::processOdom_(nav_msgs::msg::Odometry::ConstSharedPtr
 }
 
 //-----------------------------------------------------------------------------
-void OdoLocalisationPlugin::processKinematic_(romea_mobile_base_msgs::msg::KinematicMeasureStamped::ConstSharedPtr msg)
+void OdoLocalisationPlugin::process_kinematic_(KinematicMeasureStampedMsg::ConstSharedPtr msg)
 {
 
   //std::cout << " processKinematic "<< std::endl;
@@ -96,7 +125,7 @@ void OdoLocalisationPlugin::processKinematic_(romea_mobile_base_msgs::msg::Kinem
   auto twist_msg = std::make_unique<romea_localisation_msgs::msg::ObservationTwist2DStamped>();
 
   twist_msg->header.frame_id = msg->header.frame_id;
-  twist_msg->header.stamp = restamping_ ? get_clock()->now() : rclcpp::Time(msg->header.stamp.sec, msg->header.stamp.nanosec);
+  twist_msg->header.stamp = restamping_ ? node_->get_clock()->now() : rclcpp::Time(msg->header.stamp.sec, msg->header.stamp.nanosec);
   twist_msg->observation_twist.twist.linear_speeds.x =msg->measure.longitudinal_speed;
   twist_msg->observation_twist.twist.linear_speeds.y =msg->measure.lateral_speed;
   twist_msg->observation_twist.twist.angular_speed =msg->measure.angular_speed;
@@ -125,3 +154,6 @@ void OdoLocalisationPlugin::processKinematic_(romea_mobile_base_msgs::msg::Kinem
 }
 
 }
+#include <rclcpp_components/register_node_macro.hpp>
+RCLCPP_COMPONENTS_REGISTER_NODE(romea::OdoLocalisationPlugin)
+
