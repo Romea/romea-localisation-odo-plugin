@@ -1,5 +1,5 @@
+#include "romea_localisation_odo/odo_localisation_plugin_parameters.hpp"
 #include "romea_localisation_odo/odo_localisation_plugin.hpp"
-#include <romea_common_utils/params/node_parameters.hpp>
 #include <romea_common_utils/qos.hpp>
 #include <rclcpp/logging.hpp>
 
@@ -21,7 +21,7 @@ OdoLocalisationPlugin::OdoLocalisationPlugin(const rclcpp::NodeOptions & options
 {
 
   declare_parameters_();
-  restamping_ = get_parameter<bool>(node_,restamping_param_name);
+  restamping_ = get_restamping(node_);
 
   init_publisher_();
   init_subscriber_();
@@ -37,14 +37,14 @@ OdoLocalisationPlugin::get_node_base_interface() const
 //-----------------------------------------------------------------------------
 void OdoLocalisationPlugin::declare_parameters_()
 {
-  declare_parameter_with_default<bool>(node_,restamping_param_name,false);
-  declare_parameter<std::string>(node_,odo_source_param_name,"kinematic");
+  declare_restamping(node_);
+  declare_odo_source(node_);
 }
 
 //-----------------------------------------------------------------------------
 void OdoLocalisationPlugin::init_subscriber_()
 {
-  std::string odo_source_name = get_parameter<std::string>(node_,odo_source_param_name);
+  std::string odo_source_name = get_odo_source(node_);
 
   if(odo_source_name=="odom")
   {
