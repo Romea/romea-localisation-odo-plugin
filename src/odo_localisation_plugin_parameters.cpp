@@ -1,9 +1,17 @@
-#include "romea_localisation_odo/odo_localisation_plugin_parameters.hpp"
-#include <romea_common_utils/params/node_parameters.hpp>
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
 
-namespace  {
+// std
+#include <string>
+
+// romea
+#include "romea_localisation_odo/odo_localisation_plugin_parameters.hpp"
+#include "romea_common_utils/params/node_parameters.hpp"
+
+namespace
+{
 const char restamping_param_name[] = "restamping";
-const char odo_source_param_name[] = "odo_source";
+const char controller_topic_param_name[] = "controller_type";
 }
 
 namespace romea
@@ -16,9 +24,10 @@ void declare_restamping(rclcpp::Node::SharedPtr node)
 }
 
 //-----------------------------------------------------------------------------
-void declare_odo_source(rclcpp::Node::SharedPtr node)
+void declare_controller_topic(rclcpp::Node::SharedPtr node)
 {
-  declare_parameter<std::string>(node, odo_source_param_name, "kinematic");
+  declare_parameter_with_default<std::string>(
+    node, controller_topic_param_name, "kinematic");
 }
 
 //-----------------------------------------------------------------------------
@@ -28,9 +37,9 @@ bool get_restamping(rclcpp::Node::SharedPtr node)
 }
 
 //-----------------------------------------------------------------------------
-std::string get_odo_source(rclcpp::Node::SharedPtr node)
+std::string get_controller_topic(rclcpp::Node::SharedPtr node)
 {
-  return get_parameter<std::string>(node, odo_source_param_name);
+  return get_parameter<std::string>(node, controller_topic_param_name);
 }
 
 }  // namespace romea

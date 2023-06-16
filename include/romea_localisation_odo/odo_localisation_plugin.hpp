@@ -1,5 +1,8 @@
-#ifndef ROMEA_LOCALISATION_ODO_ODO_LOCALISATION_PLUGIN_HPP_
-#define ROMEA_LOCALISATION_ODO_ODO_LOCALISATION_PLUGIN_HPP_
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+#ifndef ROMEA_LOCALISATION_ODO__ODO_LOCALISATION_PLUGIN_HPP_
+#define ROMEA_LOCALISATION_ODO__ODO_LOCALISATION_PLUGIN_HPP_
 
 // Eigen
 #include <Eigen/Core>
@@ -10,10 +13,11 @@
 
 // romea
 #include "romea_localisation_odo/visibility_control.h"
-#include <romea_mobile_base_msgs/msg/kinematic_measure_stamped.hpp>
-#include <romea_localisation_msgs/msg/observation_twist2_d_stamped.hpp>
+#include "romea_mobile_base_msgs/msg/kinematic_measure_stamped.hpp"
+#include "romea_localisation_msgs/msg/observation_twist2_d_stamped.hpp"
 
-namespace romea {
+namespace romea
+{
 
 class OdoLocalisationPlugin
 {
@@ -33,8 +37,7 @@ public:
   rclcpp::node_interfaces::NodeBaseInterface::SharedPtr
   get_node_base_interface() const;
 
-private :
-
+private:
   void declare_parameters_();
 
   void process_odom_(OdometryMsg::ConstSharedPtr msg);
@@ -50,13 +53,13 @@ private :
   void init_publisher_();
 
 private:
-   rclcpp::Node::SharedPtr node_;
-   rclcpp::Subscription<OdometryMsg>::SharedPtr odom_sub_;
-   rclcpp::Subscription<KinematicMeasureStampedMsg>::SharedPtr kinematic_sub_;
-   rclcpp::Publisher<ObservationTwist2DStampedMsg>::SharedPtr twist_pub_;
-   bool restamping_;
+  rclcpp::Node::SharedPtr node_;
+  rclcpp::Subscription<OdometryMsg>::SharedPtr odom_sub_;
+  rclcpp::Subscription<KinematicMeasureStampedMsg>::SharedPtr kinematic_sub_;
+  rclcpp::Publisher<ObservationTwist2DStampedMsg>::SharedPtr twist_pub_;
+  bool restamping_;
 };
 
 }  // namespace romea
 
-#endif  // ROMEA_LOCALISATION_ODO_ODO_LOCALISATION_PLUGIN_HPP_
+#endif  // ROMEA_LOCALISATION_ODO__ODO_LOCALISATION_PLUGIN_HPP_

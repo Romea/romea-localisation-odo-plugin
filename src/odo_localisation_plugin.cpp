@@ -1,15 +1,27 @@
+// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Add license
+
+// std
+#include <memory>
+#include <string>
+#include <utility>
+
+// romea
 #include "romea_localisation_odo/odo_localisation_plugin_parameters.hpp"
 #include "romea_localisation_odo/odo_localisation_plugin.hpp"
-#include <romea_common_utils/qos.hpp>
-#include <rclcpp/logging.hpp>
+#include "romea_common_utils/qos.hpp"
+
+// ros
+#include "rclcpp/logging.hpp"
 
 
-namespace romea{
+namespace romea
+{
 
 
 //-----------------------------------------------------------------------------
-OdoLocalisationPlugin::OdoLocalisationPlugin(const rclcpp::NodeOptions & options):
-  node_(std::make_shared<rclcpp::Node>("odo_localisation_plugin", options)),
+OdoLocalisationPlugin::OdoLocalisationPlugin(const rclcpp::NodeOptions & options)
+: node_(std::make_shared<rclcpp::Node>("odo_localisation_plugin", options)),
   odom_sub_(nullptr),
   kinematic_sub_(nullptr),
   twist_pub_(),
@@ -33,29 +45,29 @@ OdoLocalisationPlugin::get_node_base_interface() const
 void OdoLocalisationPlugin::declare_parameters_()
 {
   declare_restamping(node_);
-  declare_odo_source(node_);
+  declare_controller_topic(node_);
 }
 
 //-----------------------------------------------------------------------------
 void OdoLocalisationPlugin::init_subscriber_()
 {
-  std::string odo_source_name = get_odo_source(node_);
+  std::string controller_topic = get_controller_topic(node_);
 
-  if (odo_source_name == "odom")
-  {
+  if (controller_topic == "odom") {
     init_odom_subscriber_();
-  } else if (odo_source_name == "kinematic"){
+  } else if (controller_topic == "kinematic") {
     init_kinematic_subscriber_();
-  }  else {
-    throw  std::runtime_error("Unknown odo_source called : " + odo_source_name);
+  } else {
+    throw  std::runtime_error("Unknown controller topic called : " + controller_topic);
   }
 }
 
 //-----------------------------------------------------------------------------
 void OdoLocalisationPlugin::init_odom_subscriber_()
 {
-  auto callback  = std::bind(&OdoLocalisationPlugin::process_odom_,
-                             this, std::placeholders::_1);
+  auto callback = std::bind(
+    &OdoLocalisationPlugin::process_odom_,
+    this, std::placeholders::_1);
 
   odom_sub_ = node_->create_subscription<OdometryMsg>(
     "vehicle_controller/odom", best_effort(1), callback);
@@ -64,8 +76,9 @@ void OdoLocalisationPlugin::init_odom_subscriber_()
 //-----------------------------------------------------------------------------
 void OdoLocalisationPlugin::init_kinematic_subscriber_()
 {
-  auto callback = std::bind(&OdoLocalisationPlugin::process_kinematic_,
-                            this, std::placeholders::_1);
+  auto callback = std::bind(
+    &OdoLocalisationPlugin::process_kinematic_,
+    this, std::placeholders::_1);
 
   kinematic_sub_ = node_->create_subscription<KinematicMeasureStampedMsg>(
     "vehicle_controller/kinematic", best_effort(1), callback);
@@ -88,9 +101,9 @@ void OdoLocalisationPlugin::process_odom_(OdometryMsg::ConstSharedPtr msg)
   twist_msg->header.stamp = restamping_ ? node_->get_clock()->now() :
     rclcpp::Time(msg->header.stamp.sec, msg->header.stamp.nanosec);
 
-  twist_msg->observation_twist.twist.linear_speeds.x  = msg->twist.twist.linear.x;
-  twist_msg->observation_twist.twist.linear_speeds.y  = msg->twist.twist.linear.y;
-  twist_msg->observation_twist.twist.angular_speed  = msg->twist.twist.angular.z;
+  twist_msg->observation_twist.twist.linear_speeds.x = msg->twist.twist.linear.x;
+  twist_msg->observation_twist.twist.linear_speeds.y = msg->twist.twist.linear.y;
+  twist_msg->observation_twist.twist.angular_speed = msg->twist.twist.angular.z;
 
   //  twist_msg->twist.covariance[0] = msg->twist.covariance[0];
   //  twist_msg->twist.covariance[1] = msg->twist.covariance[1];
@@ -152,6 +165,5 @@ void OdoLocalisationPlugin::process_kinematic_(KinematicMeasureStampedMsg::Const
 
 }  // namespace romea
 
-#include <rclcpp_components/register_node_macro.hpp>
+#include "rclcpp_components/register_node_macro.hpp"
 RCLCPP_COMPONENTS_REGISTER_NODE(romea::OdoLocalisationPlugin)
-
