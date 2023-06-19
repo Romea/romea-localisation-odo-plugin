@@ -3,7 +3,7 @@ repositories:
         type: git
         url: git@gitlab-ssh.irstea.fr:romea_core/romea_common.git
         version: devel
-    romea_core/romea_gps:
+    romea_core/romea_mobile_base:
         type: git
         url: git@gitlab-ssh.irstea.fr:romea_core/romea_mobile_base.git
         version: devel
@@ -15,10 +15,6 @@ repositories:
     romea_core/romea_localisation:
         type: git
         url: git@gitlab-ssh.irstea.fr:romea_core/romea_localisation.git
-        version: devel
-    romea_core/romea_localisation_gps:
-        type: git
-        url: git@gitlab-ssh.irstea.fr:romea_core/romea_localisation_gps.git
         version: devel
 
     romea_ros2/tools/romea_common:
@@ -40,4 +36,9 @@ repositories:
     romea_ros2/algorithms/localisation/romea_localisation_odo:
         type: git
         url: git@gitlab-ssh.irstea.fr:romea_ros2/algorithms/localisation/romea_localisation_odo.git
+        version: devel
+
+    romea_ros2/tools/romea_cmd_mux:
+        type: git
+        url: git@gitlab-ssh.irstea.fr:romea_ros2/tools/romea_cmd_mux.git
         version: devel
