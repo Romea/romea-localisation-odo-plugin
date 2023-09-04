@@ -35,7 +35,7 @@ repositories:
         version: devel
     romea_ros2/algorithms/localisation/romea_localisation_odo:
         type: git
-        url: git@gitlab-ssh.irstea.fr:romea_ros2/algorithms/localisation/romea_localisation_odo.git
+        url: git@gitlab-ssh.irstea.fr:romea_ros2/algorithms/localisation/romea_localisation_odo_plugin.git
         version: devel
 
     romea_ros2/tools/romea_cmd_mux:
