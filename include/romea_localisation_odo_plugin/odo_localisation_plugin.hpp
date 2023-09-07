@@ -12,7 +12,7 @@
 #include <nav_msgs/msg/odometry.hpp>
 
 // romea
-#include "romea_localisation_odo/visibility_control.h"
+#include "romea_localisation_odo_plugin/visibility_control.h"
 #include "romea_mobile_base_msgs/msg/kinematic_measure_stamped.hpp"
 #include "romea_localisation_msgs/msg/observation_twist2_d_stamped.hpp"
 

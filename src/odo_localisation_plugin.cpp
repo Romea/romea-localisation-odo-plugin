@@ -7,8 +7,8 @@
 #include <utility>
 
 // romea
-#include "romea_localisation_odo/odo_localisation_plugin_parameters.hpp"
-#include "romea_localisation_odo/odo_localisation_plugin.hpp"
+#include "romea_localisation_odo_plugin/odo_localisation_plugin_parameters.hpp"
+#include "romea_localisation_odo_plugin/odo_localisation_plugin.hpp"
 #include "romea_common_utils/qos.hpp"
 
 // ros
