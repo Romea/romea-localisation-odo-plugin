@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(romea_odo_localisation_plugin)
+project(romea_localisation_odo_plugin)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -68,7 +68,11 @@ install(TARGETS
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
 
-
+install(
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+)
+  
 #add_executable(${PROJECT_NAME}_node src/odo_localisation_plugin_node.cpp)
 #target_link_libraries(${PROJECT_NAME}_node ${PROJECT_NAME})
 #ament_target_dependencies(${PROJECT_NAME} rclcpp)
