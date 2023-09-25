@@ -1,8 +1,8 @@
 // Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
 // Add license
 
-#ifndef ROMEA_LOCALISATION_ODO__ODO_LOCALISATION_PLUGIN_HPP_
-#define ROMEA_LOCALISATION_ODO__ODO_LOCALISATION_PLUGIN_HPP_
+#ifndef ROMEA_LOCALISATION_ODO_PLUGIN__ODO_LOCALISATION_PLUGIN_HPP_
+#define ROMEA_LOCALISATION_ODO_PLUGIN__ODO_LOCALISATION_PLUGIN_HPP_
 
 // Eigen
 #include <Eigen/Core>
@@ -27,13 +27,13 @@ public:
   using ObservationTwist2DStampedMsg = romea_localisation_msgs::msg::ObservationTwist2DStamped;
 
 public:
-  ROMEA_LOCALISATION_ODO_PUBLIC
+  ROMEA_LOCALISATION_ODO_PLUGIN_PUBLIC
   explicit OdoLocalisationPlugin(const rclcpp::NodeOptions & options);
 
-  ROMEA_LOCALISATION_ODO_PUBLIC
+  ROMEA_LOCALISATION_ODO_PLUGIN_PUBLIC
   virtual ~OdoLocalisationPlugin() = default;
 
-  ROMEA_LOCALISATION_ODO_PUBLIC
+  ROMEA_LOCALISATION_ODO_PLUGIN_PUBLIC
   rclcpp::node_interfaces::NodeBaseInterface::SharedPtr
   get_node_base_interface() const;
 
@@ -62,4 +62,4 @@ private:
 
 }  // namespace romea
 
-#endif  // ROMEA_LOCALISATION_ODO__ODO_LOCALISATION_PLUGIN_HPP_
+#endif  // ROMEA_LOCALISATION_ODO_PLUGIN__ODO_LOCALISATION_PLUGIN_HPP_
