@@ -21,7 +21,7 @@
 namespace
 {
 const char restamping_param_name[] = "restamping";
-const char controller_topic_param_name[] = "controller_type";
+const char controller_topic_param_name[] = "controller_topic";
 }
 
 namespace romea

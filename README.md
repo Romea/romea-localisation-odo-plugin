@@ -10,7 +10,7 @@ This package provides odometry plugin for vehicle localisation. It takes data co
 
   This topic is provided by standard vehicle controllers (diff_drive_controller,ackermann_steering_controller, four_wheel_steering_controller),it provides a lot informations like linear angular and speeds and dead reckoning pose but without consistent uncertainties informations.
 
-- vehicle_controller/kinematic (romea_msgs::KinematicMeasuredStamped)
+- vehicle_controller/kinematic (romea_msgs::msg::KinematicMeasuredStamped)
 
   This topic is provided by romea mobile base controllers. It's provides robot kinematic measure and its covariance computed in taking into account odometry data and sensors uncertainties. This topic should be preferred to the other because the uncertainties are reliable.
 
@@ -18,9 +18,11 @@ This package provides odometry plugin for vehicle localisation. It takes data co
 
 - twist (romea_localisation_msgs::ObservationTwist2DStamped)
 
+  Vehicle 2D twist compose by linear velocities along x and y axes + angular velocities around z axis and their covariance 
+
 ### 2.3 Parameters ###
 
-- odo_source (string, default: kinematic)
+- controller_topic (string, default: kinematic)
 
     This parameter is used to select odometry source:
 
