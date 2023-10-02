@@ -1,6 +1,6 @@
 # 1 Overview #
 
-This package provides odometry plugin for vehicle localisation. It takes data coming from vehicle controller to convert them to a simple 2D twist measure with its covariance.
+This package provides odometry plugin for robot localisation. It takes data coming from mobile base controller to convert them to a simple 2D twist measure with its covariance.
 
 # 2 Node #
 
