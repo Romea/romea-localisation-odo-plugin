@@ -57,7 +57,7 @@ ament_target_dependencies(${PROJECT_NAME}
   nav_msgs)
 
 rclcpp_components_register_node(${PROJECT_NAME}
-  PLUGIN "romea::OdoLocalisationPlugin"
+  PLUGIN "romea::ros2::OdoLocalisationPlugin"
   EXECUTABLE odo_localisation_plugin_node
 )
 

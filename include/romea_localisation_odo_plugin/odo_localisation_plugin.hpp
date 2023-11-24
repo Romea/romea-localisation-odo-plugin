@@ -29,6 +29,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 class OdoLocalisationPlugin
 {
@@ -71,6 +73,7 @@ private:
   bool restamping_;
 };
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_LOCALISATION_ODO_PLUGIN__ODO_LOCALISATION_PLUGIN_HPP_

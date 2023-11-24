@@ -28,6 +28,8 @@
 
 namespace romea
 {
+namespace ros2
+{
 
 
 //-----------------------------------------------------------------------------
@@ -174,7 +176,8 @@ void OdoLocalisationPlugin::process_kinematic_(KinematicMeasureStampedMsg::Const
   twist_pub_->publish(std::move(twist_msg));
 }
 
+}  // namespace ros2
 }  // namespace romea
 
 #include "rclcpp_components/register_node_macro.hpp"
-RCLCPP_COMPONENTS_REGISTER_NODE(romea::OdoLocalisationPlugin)
+RCLCPP_COMPONENTS_REGISTER_NODE(romea::ros2::OdoLocalisationPlugin)

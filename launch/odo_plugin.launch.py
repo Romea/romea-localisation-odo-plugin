@@ -50,7 +50,7 @@ def launch_setup(context, *args, **kwargs):
     else:
         composable_node = ComposableNode(
                 package="romea_localisation_odo_plugin",
-                plugin="romea::OdoLocalisationPlugin",
+                plugin="romea::ros2::OdoLocalisationPlugin",
                 name=plugin_name,
                 parameters=[plugin_configuration],
             )

@@ -26,6 +26,8 @@ const char controller_topic_param_name[] = "controller_topic";
 
 namespace romea
 {
+namespace ros2
+{
 
 //-----------------------------------------------------------------------------
 void declare_restamping(rclcpp::Node::SharedPtr node)
@@ -52,4 +54,5 @@ std::string get_controller_topic(rclcpp::Node::SharedPtr node)
   return get_parameter<std::string>(node, controller_topic_param_name);
 }
 
+}  // namespace ros2
 }  // namespace romea
