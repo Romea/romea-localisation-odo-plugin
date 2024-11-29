@@ -33,7 +33,9 @@ This package is an odometry plugin for robot localization, developed within the 
 
     If this parameter is set to true stamp of twist message is equal to computer current time else this stamp is equal odo stamp.  This paremeter will be used when odometry data are coming from a remote master.
 
+## **Usage**
 
+See romea_localisation_bringup project
 
 ## **Contributing**
 
