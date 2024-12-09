@@ -1,4 +1,4 @@
-# romea_localisation_odo_plugin
+# romea_ros2_localisation_odo_plugin
 
 This package is an odometry plugin for robot localization, developed within the ROMEA ecosystem for ROS2. It processes data from the mobile base controller to convert it into a simple 2D twist measurement along with its associated covariance.
 
@@ -35,7 +35,7 @@ This package is an odometry plugin for robot localization, developed within the 
 
 ## **Usage**
 
-See romea_localisation_bringup project
+See romea_ros2_localisation_bringup project
 
 ## **Contributing**
 
@@ -55,8 +55,8 @@ This project is released under the Apache License 2.0. See the LICENSE file for 
 
 ### Authors
 
-The romea_localisation_odo_plugin project was developed by **Jean Laneurit** in the context of BaudetRob2 ANR project.
+The romea_ros2_localisation_odo_plugin project was developed by **Jean Laneurit** in the context of BaudetRob2 ANR project.
 
 ### Contact
 
-If you have any questions or comments about romea_localisation_odo_plugin project, please contact **[Jean Laneurit](mailto:jean.laneurit@inrae.fr)** 
+If you have any questions or comments about romea_ros2_localisation_odo_plugin project, please contact **[Jean Laneurit](mailto:jean.laneurit@inrae.fr)** 
